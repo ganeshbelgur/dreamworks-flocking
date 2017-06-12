@@ -3,11 +3,14 @@
 
 int Flocking::update()
 {
+  bool stopSimulation = false;
   for(int i = 0; i < boids.size(); i++){
-      boids[i].update(boids, destination);
+      stopSimulation = boids[i].update(boids, destination);
+      if (stopSimulation)
+        break;
   }
 
-  return true;
+  return !stopSimulation;
 }
 
 void Flocking::addBoid(int x, int y){

@@ -54,8 +54,13 @@ public:
 
   float dist(Vec2f v1,Vec2f v2);
   float clamp(float val, float minval, float maxval);
-	void update(vector<Boid> &boids, Vec2f destination);
+	bool update(vector<Boid> &boids, Vec2f destination);
   void boundCheck(int padding);
   void flock(vector<Boid> &boids, Vec2f destination);
   bool isHit(int x,int y, int radius);
+	void applyForce(Vec2f force);
+	Vec2f seek(Vec2f target);
+	Vec2f separate(vector<Boid> &boids);
+	Vec2f align(vector<Boid> &boids);
+	Vec2f cohesion(vector<Boid> &boids);
 };

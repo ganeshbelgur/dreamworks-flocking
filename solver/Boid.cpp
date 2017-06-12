@@ -25,11 +25,13 @@ Boid::Boid(
   float mflockAliRadius,
   float mflockCohRadius
 ){
-    loc.setval(x,y);
-	  vel.setval(0.1, 0.1);
-	  acc.setval(0, 0);
-    r = 3.0;
+    acc.setval(0, 0);
+
     orient = (float)randomRange(0, 360);
+    vel.setval(cos(orient), sin(orient));
+    loc.setval(x,y);
+
+    r = 2.0;
     endCorner.setval(xbound,ybound);
     reachedDestination = false;
     hitObstacle = false;
@@ -46,16 +48,21 @@ Boid::Boid(
 }
 
 // Method to update location
-void Boid::update(vector<Boid> &boids, Vec2f destination) {
+bool Boid::update(vector<Boid> &boids, Vec2f destination) {
 
 	flock(boids, destination);
 
-    vel *= maxSpeed;
-    loc += vel;
-    //acc.setval(0,0);  // Resetval accelertion to 0 each cycle
-    orient = (float)atan2(vel.y,vel.x) * 180/PI + generateRandom(-20.0, 20.0);
+  vel += acc;
+  vel.limit(maxSpeed);
+  loc += vel;
+  acc.setval(0,0);  // Resetval accelertion to 0 each cycle
+  orient = (float)atan2(vel.y,vel.x) * 180/PI;
+  boundCheck(boundaryPadding);
 
-    boundCheck(boundaryPadding);
+  if (dist(loc, destination) < 5.0f)
+    reachedDestination = true;
+
+  return reachedDestination;
 }
 
 void Boid::boundCheck(int padding){
@@ -86,72 +93,110 @@ void Boid::boundCheck(int padding){
   }
 }
 
-//Flock your boids here
-void Boid::flock(vector<Boid> &boids, Vec2f destination){
-  int neighbourAlignmentCount = 0;
-  int neighbourCohesionCount = 0;
-  int neighbourSeparationCount = 0;
+void Boid::applyForce(Vec2f force){
+    acc += force;
+}
 
-  Vec2f alignmentVector(0.0, 0.0);
-  Vec2f cohesionVector(0.0, 0.0);
-  Vec2f separationVector(0.0, 0.0);
+Vec2f Boid::seek(Vec2f target){
+  Vec2f desired = target - loc;
+
+  desired.normalize();
+  desired *= maxSpeed;
+
+  Vec2f steer = desired - vel;
+  steer.limit(maxForce);
+  return steer;
+}
+
+Vec2f Boid::separate(vector<Boid> &boids){
+  Vec2f steer(0.0, 0.0);
+  int neighbourSeparationCount = 0;
 
   for(int i = 0; i < boids.size(); i++){
     float distance = dist(loc, boids[i].loc);
 
-    if(distance < flockAliRadius && distance != 0.0f){
-      alignmentVector.x += boids[i].vel.x;
-      alignmentVector.y += boids[i].vel.y;
-      neighbourAlignmentCount++;
-    }
-
-    if(distance < flockCohRadius && distance != 0.0f){
-      cohesionVector.x += boids[i].loc.x;
-      cohesionVector.y += boids[i].loc.y;
-      neighbourCohesionCount++;
-    }
-
-    if(distance < flockSepRadius && distance != 0.0f){
-      separationVector.x += boids[i].loc.x - loc.x;
-      separationVector.y += boids[i].loc.y - loc.y;
+    if(distance > 0.0f && distance < flockSepRadius){
+      Vec2f difference = loc - boids[i].loc;
+      difference.normalize();
+      steer += difference;
       neighbourSeparationCount++;
     }
   }
 
-  alignmentVector.x /= neighbourAlignmentCount;
-  alignmentVector.y /= neighbourAlignmentCount;
-  alignmentVector.normalize();
+  if (neighbourSeparationCount > 0)
+    steer /= neighbourSeparationCount;
 
-  cohesionVector.x /= neighbourCohesionCount;
-  cohesionVector.y /= neighbourCohesionCount;
-  cohesionVector = Vec2f(cohesionVector.x - loc.x, cohesionVector.y - loc.y);
-  cohesionVector.normalize();
+  if (steer.length() > 0){
+    steer.normalize();
+    steer *= maxSpeed;
+    steer -= vel;
+    steer.limit(maxForce);
+  }
 
-  separationVector.x /= neighbourSeparationCount;
-  separationVector.y /= neighbourSeparationCount;
-  separationVector.x *= -1;
-  separationVector.y *= -1;
-  separationVector.normalize();
+  return steer;
+}
 
-  Vec2f resultant(0.0, 0.0);
-  resultant.x += \
-    (alignmentVector.x * flockAliWeight) + \
-    (cohesionVector.x * flockCohWeight) + \
-    (separationVector.x * flockSepWeight) + \
-    (destination.x - loc.x) * 0.01;
+Vec2f Boid::align(vector<Boid> &boids){
+  Vec2f sum(0.0f, 0.0f);
+  int neighbourAlignmentCount = 0;
 
-  resultant.y += \
-    (alignmentVector.y * flockAliWeight) + \
-    (cohesionVector.y * flockCohWeight) + \
-    (separationVector.y * flockSepWeight) + \
-    (destination.y - loc.y) * 0.01;
+  for(int i = 0; i < boids.size(); i++){
+    float distance = dist(loc, boids[i].loc);
 
-  vel += Vec2f(resultant.x, resultant.y);
-  std::cout << "destination.x: " << destination.x << endl << "destination.y: " << destination.y << endl;
-  std::cout << "alignmentVector.x: " << alignmentVector.x << endl << "alignmentVector.y: " << alignmentVector.y << endl;
-  std::cout << "cohesionVector.x: " << cohesionVector.x << endl << "cohesionVector.y: " << cohesionVector.y << endl;
-  std::cout << "separationVector.x: " << separationVector.x << endl << "separationVector.y: " << separationVector.y << endl;
-  std::cout << "resultant.x: " << resultant.x << endl << "resultant.y: " << resultant.y << endl;
+    if(distance > 0.0f && distance < flockAliRadius){
+      sum += boids[i].vel;
+      neighbourAlignmentCount++;
+    }
+  }
+
+  if(neighbourAlignmentCount > 0){
+    sum /= neighbourAlignmentCount;
+    sum.normalize();
+    sum *= maxSpeed;
+
+    Vec2f steer = sum - vel;
+    steer.limit(maxForce);
+    return steer;
+  }
+  else
+    return Vec2f(0.0, 0.0);
+}
+
+Vec2f Boid::cohesion(vector<Boid> &boids){
+  Vec2f sum(0.0f, 0.0f);
+  int neighbourCohesionCount = 0;
+
+  for(int i = 0; i < boids.size(); i++){
+    float distance = dist(loc, boids[i].loc);
+
+    if(distance > 0.0f && distance < flockCohRadius){
+      sum += boids[i].loc;
+      neighbourCohesionCount++;
+    }
+  }
+
+  if (neighbourCohesionCount > 0){
+    sum /= neighbourCohesionCount;
+    return seek(sum);
+  }
+  else
+    return Vec2f(0.0, 0.0);
+}
+
+//Flock your boids here
+void Boid::flock(vector<Boid> &boids, Vec2f destination){
+  Vec2f separationVector = separate(boids);
+  Vec2f alignmentVector = align(boids);
+  Vec2f cohesionVector = cohesion(boids);
+
+  separationVector *= flockSepWeight;
+  alignmentVector *= flockAliWeight;
+  cohesionVector *= flockCohWeight;
+
+  applyForce(separationVector);
+  applyForce(alignmentVector);
+  applyForce(cohesionVector);
+  applyForce((destination - loc) * 0.00001);
 }
 
 bool Boid::isHit(int x, int y, int radius) {

@@ -76,11 +76,11 @@ int simMain(int argc, char* argv[]){
     cout << "Simulating for level: " << level << endl;
 
     //Provide appropriate values for these:
-    float maxSpeed = 0.1;
-    float maxForce = 0;
-    float flockSepWeight = 0.7;
-    float flockAliWeight = 0.4;
-    float flockCohWeight = 0.2;
+    float maxSpeed = 0.5;
+    float maxForce = 0.01;
+    float flockSepWeight = 1.2;
+    float flockAliWeight = 0.1;
+    float flockCohWeight = 1.0;
     float collisionWeight = 0;
     float flockSepRadius = 50;
     float flockAliRadius = 250;
