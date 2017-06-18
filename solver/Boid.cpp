@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <cmath>
 #include "constants.h"
+
 /*
 Add functions needed to create a working flock.
 */
@@ -63,17 +64,6 @@ bool Boid::update(vector<Boid> &boids, Vec2f destination, float** collisionSDF, 
   if (dist(loc, destination) < 5.0f)
     reachedDestination = true;
 
-  std::string myString;
-
-  for(int i = 0; i < obstacles.size(); i++){
-      myString = myString+ "DO "
-      + std::to_string(i + 1) + " "
-      + std::to_string(obstacles[i].x) + " "
-      + std::to_string(obstacles[i].y) + " "
-      + std::to_string(obstacles[i].z) + "$$";
-  }
-
-  std::cout << myString;
   return reachedDestination;
 }
 
@@ -208,10 +198,23 @@ void Boid::flock(vector<Boid> &boids, Vec2f destination, float** collisionSDF, V
   applyForce(separationVector);
   applyForce(alignmentVector);
   applyForce(cohesionVector);
-  applyForce((destination - loc) * 0.00000005);
+  applyForce((destination - loc) * 0.0000001);
 
   if(collisionSDF[(int)loc.x][(int)loc.y] <= 0.2f){
     applyForce(partialDerivaties[(int)loc.x][(int)loc.y] * 20.0f);
+    Vec2f test = partialDerivaties[(int)loc.x][(int)loc.y] * 20.0f;
+    //std::cout << "Applied a partialDerivaties force of: " << test.x << " " << test.y << std::endl;
+  }
+
+  if(obstacles.size() && isHit(obstacles[0].x, obstacles[0].y, 30)){
+    Vec2f tractorPosition(obstacles[0].x, obstacles[0].y);
+    Vec2f runAway = loc - tractorPosition;
+    runAway.normalize();
+    applyForce(runAway * 50.0f);
+    Vec2f test = runAway * 50.0f;
+    std::cout << "Sheep location: " << loc.x << " " << loc.y << std::endl;
+    std::cout << "Tractor location: " << tractorPosition.x << " " << tractorPosition.y << std::endl;
+    std::cout << "Run away force: " << test.x << " " << test.y << std::endl;
   }
 }
 

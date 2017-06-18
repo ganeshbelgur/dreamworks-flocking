@@ -71,11 +71,11 @@ void ToBlender(Flocking* flockDisplay){
     std::string myString;
 
     for(int i = 0; i < obstacles.size();i++) {
-        myString = myString+ "DO "
-        + std::to_string(i + 1) + " "
-        + std::to_string( obstacles[i].x) + " "
-        + std::to_string(obstacles[i].y) + " "
-        + std::to_string(obstacles[i].z) + "$$";
+      myString = myString+ "DO "
+      + std::to_string(i + 1) + " "
+      + std::to_string( obstacles[i].x) + " "
+      + std::to_string(obstacles[i].y) + " "
+      + std::to_string(obstacles[i].z) + "$$";
     }
 
     if(flockDisplay) {
@@ -130,7 +130,6 @@ void ToBlender(Flocking* flockDisplay){
     if( send(sockfd , myString.c_str(), strlen(myString.c_str()),0 )<0) {
         cout<<"Sending to socket failed";
     }
-    obstacles.clear();
 }
 
 void Simulation::loadScene(char* mapFile)

@@ -10,6 +10,7 @@ int Flocking::update()
         break;
   }
 
+  obstacles.clear();
   return !stopSimulation;
 }
 
