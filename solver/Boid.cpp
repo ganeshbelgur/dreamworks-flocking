@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <cmath>
+#include "constants.h"
 /*
 Add functions needed to create a working flock.
 */
@@ -48,9 +49,9 @@ Boid::Boid(
 }
 
 // Method to update location
-bool Boid::update(vector<Boid> &boids, Vec2f destination) {
+bool Boid::update(vector<Boid> &boids, Vec2f destination, float** collisionSDF, Vec2f** partialDerivaties){
 
-	flock(boids, destination);
+	flock(boids, destination, collisionSDF, partialDerivaties);
 
   vel += acc;
   vel.limit(maxSpeed);
@@ -62,6 +63,17 @@ bool Boid::update(vector<Boid> &boids, Vec2f destination) {
   if (dist(loc, destination) < 5.0f)
     reachedDestination = true;
 
+  std::string myString;
+
+  for(int i = 0; i < obstacles.size(); i++){
+      myString = myString+ "DO "
+      + std::to_string(i + 1) + " "
+      + std::to_string(obstacles[i].x) + " "
+      + std::to_string(obstacles[i].y) + " "
+      + std::to_string(obstacles[i].z) + "$$";
+  }
+
+  std::cout << myString;
   return reachedDestination;
 }
 
@@ -184,7 +196,7 @@ Vec2f Boid::cohesion(vector<Boid> &boids){
 }
 
 //Flock your boids here
-void Boid::flock(vector<Boid> &boids, Vec2f destination){
+void Boid::flock(vector<Boid> &boids, Vec2f destination, float** collisionSDF, Vec2f** partialDerivaties){
   Vec2f separationVector = separate(boids);
   Vec2f alignmentVector = align(boids);
   Vec2f cohesionVector = cohesion(boids);
@@ -196,7 +208,11 @@ void Boid::flock(vector<Boid> &boids, Vec2f destination){
   applyForce(separationVector);
   applyForce(alignmentVector);
   applyForce(cohesionVector);
-  applyForce((destination - loc) * 0.00001);
+  applyForce((destination - loc) * 0.00000005);
+
+  if(collisionSDF[(int)loc.x][(int)loc.y] <= 0.2f){
+    applyForce(partialDerivaties[(int)loc.x][(int)loc.y] * 20.0f);
+  }
 }
 
 bool Boid::isHit(int x, int y, int radius) {

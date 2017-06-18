@@ -54,9 +54,9 @@ public:
 
   float dist(Vec2f v1,Vec2f v2);
   float clamp(float val, float minval, float maxval);
-	bool update(vector<Boid> &boids, Vec2f destination);
+	bool update(vector<Boid> &boids, Vec2f destination, float** collisionSDF, Vec2f** partialDerivaties);
   void boundCheck(int padding);
-  void flock(vector<Boid> &boids, Vec2f destination);
+  void flock(vector<Boid> &boids, Vec2f destination, float** collisionSDF, Vec2f** partialDerivaties);
   bool isHit(int x,int y, int radius);
 	void applyForce(Vec2f force);
 	Vec2f seek(Vec2f target);

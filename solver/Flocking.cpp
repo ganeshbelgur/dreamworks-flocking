@@ -5,7 +5,7 @@ int Flocking::update()
 {
   bool stopSimulation = false;
   for(int i = 0; i < boids.size(); i++){
-      stopSimulation = boids[i].update(boids, destination);
+      stopSimulation = boids[i].update(boids, destination, collisionSDF, partialDerivaties);
       if (stopSimulation)
         break;
   }
@@ -76,7 +76,7 @@ vector<Boid> Flocking::getBoids()
     return boids;
 }
 
-Vec2f** Flocking::calculatePartialDerivaties()
+void Flocking::calculatePartialDerivaties()
 {
     partialDerivaties = (Vec2f**)malloc(sizeof(Vec2f*) * x_bound);
     for(int i=0;i<x_bound;i++)
@@ -106,7 +106,6 @@ Vec2f** Flocking::calculatePartialDerivaties()
             partialDerivaties[i][j].setval(difx,dify);
         }
     }
-    return partialDerivaties;
 }
 
 void Flocking::useCollisionSDF(bool val)

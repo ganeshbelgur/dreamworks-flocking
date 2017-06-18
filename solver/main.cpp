@@ -78,7 +78,7 @@ int simMain(int argc, char* argv[]){
     //Provide appropriate values for these:
     float maxSpeed = 0.5;
     float maxForce = 0.01;
-    float flockSepWeight = 1.2;
+    float flockSepWeight = 1.5;
     float flockAliWeight = 0.1;
     float flockCohWeight = 1.0;
     float collisionWeight = 0;

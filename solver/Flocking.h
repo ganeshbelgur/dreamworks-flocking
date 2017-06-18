@@ -14,7 +14,7 @@ class Flocking {
 	  void setDestination(int x, int y,float area);
 	  void setDestination(Vec2f dest,float area);
 	  void setSceneMap(Scene* scene);
-	  Vec2f** calculatePartialDerivaties();
+	  void calculatePartialDerivaties();
 	  void useCollisionSDF(bool val);
 	  vector<Boid> getBoids();
 
