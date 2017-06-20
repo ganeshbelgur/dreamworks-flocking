@@ -29,7 +29,7 @@ Navigate to the destination by crossing more obstacles. How much do your sheep l
 1. Build your code - make
 2. Run the run_scene'level_number'.sh
 
-If you get linker errors, make sure you set LD_LIBRARY_PATH to path of the dynamic .so file.
+If you get linker errors, make sure you set LD_LIBRARY_PATH to path of the 'libdynamic.so' file.
 
 ### Collision Detection
 ##### Static Obstacles
@@ -43,7 +43,7 @@ If you get linker errors, make sure you set LD_LIBRARY_PATH to path of the dynam
 - Notes/Hints: You don't have to bother about VDBs and map handling. Just focus on working on the boids and flocking.
 
 ## My Submission
-Flocking simulation is based on the algorithm presented by Craig Reynolds in 1987. The algorithm revovles mainly around three important rules called Separation, Alignment and Cohesion. Using these three rules a steering vector is derived. This vector drives the simulation. A very weak destination steering vector is also added to ensure that the flock reaches the barn.
+Flocking simulation is based on the algorithm presented by Craig Reynolds in 1987. The algorithm revovles mainly around three important rules called Separation, Alignment and Cohesion. Using these three rules, a steering vector is derived. This vector drives the simulation. A very weak destination steering vector is also added to ensure that the flock reaches the barn.
 
 A collision detection method using the Signed Distance Function is used to avoid static obstacles as the flock wanders around. In one of the scenes, a dynamic obstacle (a tractor) is avoided by applying a force, on each Boid, in the direction opposite to the direction in which a Boid approaches the obstacle.
 
@@ -52,3 +52,10 @@ Static Collisions:
 
 Dynamic Collisions:
 ![alt tag](https://github.com/ganeshbelgur/dreamworks-flocking/blob/master/screenshots/dynamic-collisions.png)
+
+###### Don't blame me if the sheeps are reluctant to go to the barn. I've designed them to be that way! They will take their own time. :)
+
+### References:
+- C. W. Reynolds, “Flocks, herds and schools: a distributed behavioral model.” Computer Graphics, 2 1 (4):25-34, 1987.
+- http://www.red3d.com/cwr/boids/
+- https://github.com/usama-ghufran/steerQuest_ABAI

@@ -34,6 +34,7 @@ public:
 	float flockSepRadius;
 	float flockAliRadius;
 	float flockCohRadius;
+	float destinationWeight;
 
 	Boid(
 		int x,
@@ -48,7 +49,8 @@ public:
 		float mflockCohWeight,
 		float mflockSepRadius,
 		float mflockAliRadius,
-		float mflockCohRadius
+		float mflockCohRadius,
+		float destinationWeight
 	);
 
   float dist(Vec2f v1,Vec2f v2);

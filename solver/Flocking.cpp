@@ -29,7 +29,8 @@ void Flocking::addBoid(int x, int y){
 			flockCohWeight,
 			flockSepRadius,
 			flockAliRadius,
-			flockCohRadius
+			flockCohRadius,
+      destWeight
     )
   );
 }

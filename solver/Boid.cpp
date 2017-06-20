@@ -18,7 +18,8 @@ Boid::Boid(
   float mflockCohWeight,
   float mflockSepRadius,
   float mflockAliRadius,
-  float mflockCohRadius
+  float mflockCohRadius,
+  float destWeight
 ){
     acc.setval(0, 0);
 
@@ -39,6 +40,7 @@ Boid::Boid(
     flockSepRadius = mflockSepRadius;
     flockAliRadius = mflockAliRadius;
     flockCohRadius = mflockCohRadius;
+    destinationWeight = destWeight;
 }
 
 // Method to update location
@@ -203,7 +205,7 @@ void Boid::flock(vector<Boid> &boids, Vec2f destination, float** collisionSDF, V
   applyForce(separationVector);
   applyForce(alignmentVector);
   applyForce(cohesionVector);
-  applyForce((destination - loc) * 0.0000001);
+  applyForce((destination - loc) * destinationWeight);
 
   if(collisionSDF[(int)loc.x][(int)loc.y] <= 0.2f)
   {

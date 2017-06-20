@@ -191,7 +191,7 @@ bool Simulation::frame()
 
 void Simulation::init(
   long msleepTime,
-  int mfishCount,
+  int mSheepCount,
   int mboundaryPadding,
   float mmaxSpeed,
   float mmaxForce,
@@ -210,7 +210,7 @@ void Simulation::init(
 	auto endTime = std::chrono::steady_clock::now();
 
   sleepTime = msleepTime;
-  fishCount = mfishCount;
+  sheepCount = mSheepCount;
   boundaryPadding = mboundaryPadding;
   maxSpeed = mmaxSpeed;
   maxForce = mmaxForce;
@@ -254,7 +254,7 @@ void Simulation::init(
 
   int seed = randSeed;
 
-	for(int i = 0; i < fishCount; ++i)
+	for(int i = 0; i < sheepCount; ++i)
     {
         float rand_radius = (float)randomRange(0, (int)(startPositionRadius * 100), seed + i) / 100;
         float theta = (float)randomRange(0, 360, seed + i + 1);//Arbritary +1. just to change seed

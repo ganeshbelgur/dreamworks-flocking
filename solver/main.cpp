@@ -88,7 +88,7 @@ int simMain(int argc, char* argv[])
     float separationRadius = 50;
     float alignmentRadius = 250;
     float cohesionRadius = 100;
-    float destinationWeight = 0;
+    float destinationWeight = 0.0000001;
 
     Simulation simulation;
     simulation.loadScene(mapFile);

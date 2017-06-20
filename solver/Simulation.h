@@ -20,7 +20,7 @@ class Simulation
 		void loadScene(char* mapFile);
 		void init(
 			long msleepTime,
-		  int	mfishCount,
+		  int	mSheepCount,
 		  int	mboundaryPadding,
 		  float	mmaxSpeed,
 		  float	mmaxForce,
@@ -65,7 +65,7 @@ class Simulation
 
 		//init variables
 		long sleepTime;
-	  int fishCount;
+	  int sheepCount;
 	  int boundaryPadding;
 	  float maxSpeed;
 	  float maxForce;

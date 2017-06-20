@@ -4,7 +4,7 @@
 	# 3. boundary_padding
 	# 4. random_seed
 	# 5. Level
-
+export LD_LIBRARY_PATH=../solver/
 ./scene1 &
 
 sleep 10s;
