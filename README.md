@@ -48,7 +48,7 @@ Flocking simulation is based on the algorithm presented by Craig Reynolds in 198
 A collision detection method using the Signed Distance Function is used to avoid static obstacles as the flock wanders around. In one of the scenes, a dynamic obstacle (a tractor) is avoided by applying a force, on each Boid, in the direction opposite to the direction in which a Boid approaches the obstacle.
 
 Static Collisions:
-![alt tag](https://github.com/ganeshbelgur/dreamworks-flocking/screenshots/static-collisions.png)
+![alt tag](https://github.com/ganeshbelgur/dreamworks-flocking/tree/master/screenshots/static-collisions.png)
 
 Dynamic Collisions:
-![alt tag](https://github.com/ganeshbelgur/dreamworks-flocking/screenshots/dynamic-collisions.png)
+![alt tag](https://github.com/ganeshbelgur/dreamworks-flocking/tree/master/screenshots/dynamic-collisions.png)
