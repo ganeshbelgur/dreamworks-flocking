@@ -27,7 +27,7 @@ Navigate to the destination by crossing more obstacles. How much do your sheep l
 
 ### Compiling Instructions
 1. Build your code - make
-2. Run the run_scene<level>.sh
+2. Run the run_scene'level_number'.sh
 
 If you get linker errors, make sure you set LD_LIBRARY_PATH to path of the dynamic .so file.
 

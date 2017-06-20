@@ -2,8 +2,8 @@
 #include "Boid.h"
 #include "Scene.h"
 
-class Flocking {
-
+class Flocking
+{
 	public:
 		int update();
 		void addBoid();
@@ -17,7 +17,6 @@ class Flocking {
 	  void calculatePartialDerivaties();
 	  void useCollisionSDF(bool val);
 	  vector<Boid> getBoids();
-
 	  void setSimulationParameters(
 	    int mboundaryPadding,
 	    float mmaxSpeed,

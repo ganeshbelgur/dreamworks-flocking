@@ -21,10 +21,9 @@ public:
 	bool reachedDestination;
 	float orient;
 
-	Vec2f vel,acc;
+	Vec2f vel, acc;
 	Vec2i endCorner;
 
-  float r;
 	bool hitObstacle;
 	int boundaryPadding;
 	float maxSpeed;

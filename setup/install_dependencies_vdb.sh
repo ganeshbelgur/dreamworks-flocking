@@ -6,5 +6,5 @@ sudo apt-get install libboost-dev
 sudo apt-get install libilmbase-dev
 sudo apt-get install libtbb-dev
 
-#to visualize vdb grids
+# To visualize vdb grids
 #sudo apt-get install libopenvdb-tools

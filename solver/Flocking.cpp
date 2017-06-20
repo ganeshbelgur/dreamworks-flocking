@@ -1,5 +1,5 @@
 #include "Flocking.h"
-#include "constants.h"
+#include "Constants.h"
 
 int Flocking::update()
 {
@@ -34,11 +34,14 @@ void Flocking::addBoid(int x, int y){
   );
 }
 
-void Flocking::removeBoid(int x, int y, int radius){
+void Flocking::removeBoid(int x, int y, int radius)
+{
     int i;
-    for (i=0; i<boids.size(); i++){
-      if(boids[i].isHit(x, y, radius)){
-          boids.erase(boids.begin()+i);
+    for (i = 0; i < boids.size(); i++)
+    {
+      if(boids[i].isHit(x, y, radius))
+      {
+          boids.erase(boids.begin() + i);
       }
     }
 }
@@ -54,7 +57,7 @@ void Flocking::setBounds(int x, int y)
   y_bound = y;
 }
 
-void Flocking::setDestination(int x, int y,float area)
+void Flocking::setDestination(int x, int y, float area)
 {
     destination.setval((float)x,(float)y);
     destinationArea = area;
@@ -80,31 +83,31 @@ vector<Boid> Flocking::getBoids()
 void Flocking::calculatePartialDerivaties()
 {
     partialDerivaties = (Vec2f**)malloc(sizeof(Vec2f*) * x_bound);
-    for(int i=0;i<x_bound;i++)
+    for(int i=0; i < x_bound; i++)
     {
-        partialDerivaties[i]=(Vec2f*)malloc(sizeof(Vec2f*) * y_bound);
-        memset(partialDerivaties[i],0,y_bound);
+        partialDerivaties[i] = (Vec2f*)malloc(sizeof(Vec2f*) * y_bound);
+        memset(partialDerivaties[i], 0, y_bound);
     }
 
-    int padding=1;
+    int padding = 1;
 
-    for(int i=padding;i<x_bound-padding;i++)
+    for(int i = padding; i < x_bound - padding; i++)
     {
-        for(int j=padding;j<y_bound-padding;j++)
+        for(int j = padding; j < y_bound - padding; j++)
         {
-            float dify=0;
-            if(collisionSDF[i][j]==999||collisionSDF[i][j-padding]==999)
-                dify=0;
+            float dify = 0;
+            if(collisionSDF[i][j] == 999 || collisionSDF[i][j - padding] == 999)
+                dify = 0;
             else
-                dify=collisionSDF[i][j]-collisionSDF[i][j-padding];
+                dify = collisionSDF[i][j] - collisionSDF[i][j - padding];
 
-            float difx=0;
-            if(collisionSDF[i][j]==999||collisionSDF[i-padding][j]==999)
-                difx=0;
+            float difx = 0;
+            if(collisionSDF[i][j] == 999 || collisionSDF[i - padding][j] == 999)
+                difx = 0;
             else
-                difx=collisionSDF[i][j]-collisionSDF[i-padding][j];
+                difx = collisionSDF[i][j] - collisionSDF[i - padding][j];
 
-            partialDerivaties[i][j].setval(difx,dify);
+            partialDerivaties[i][j].setval(difx, dify);
         }
     }
 }
@@ -115,7 +118,7 @@ void Flocking::useCollisionSDF(bool val)
 
     if(useCollisionFromSDF)
     {
-        collisionSDF = sceneMap->getSDFhandle();
+        collisionSDF = sceneMap -> getSDFhandle();
     }
 }
 
@@ -130,8 +133,8 @@ void Flocking::setSimulationParameters(
 	float mflockSepRadius,
 	float mflockAliRadius,
 	float mflockCohRadius,
-  float	mdestWeight){
-
+  float	mdestWeight)
+  {
 	boundaryPadding = mboundaryPadding;
 	maxSpeed = mmaxSpeed;
 	maxForce = mmaxForce;

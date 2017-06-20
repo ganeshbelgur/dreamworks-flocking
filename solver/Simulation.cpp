@@ -1,7 +1,4 @@
-#include "Simulation.h"
-#include "constants.h"
-#include "dynamic.h"
-#include <unistd.h>     // Header File for sleeping.
+#include <unistd.h>
 #include <string.h>
 #include <thread>
 #include <stdio.h>
@@ -15,7 +12,12 @@
 #include <netdb.h>
 #include <iomanip>
 
+#include "Simulation.h"
+#include "Constants.h"
+#include "dynamic.h"
+
 using namespace math;
+
 void ToBlender();
 
 int count = 0;
@@ -44,24 +46,26 @@ void initSocket()
     server = gethostbyname("localhost");
     std::cout << server << std::endl;
 
-    if (server == NULL) {
+    if (server == NULL)
+    {
         fprintf(stderr,"ERROR, no such host\n");
         exit(0);
     }
 
     bzero((char *) &serv_addr, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
-    bcopy((char *)server->h_addr, (char *)&serv_addr.sin_addr.s_addr,server->h_length);
+    bcopy((char *)server -> h_addr, (char *)&serv_addr.sin_addr.s_addr, server->h_length);
     serv_addr.sin_port = htons(portno);
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
     if (sockfd < 0)
         error("ERROR: Socket failed to open.\n");
-    if (connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0)
+    if (connect(sockfd,(struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
         error("ERROR: Connection to socket failed.\n");
 }
 
-void ToBlender(Flocking* flockDisplay){
+void ToBlender(Flocking* flockDisplay)
+{
 
     /* This sends sheep and obstacle data to Blender.
        Don't modify this code. */
@@ -70,7 +74,8 @@ void ToBlender(Flocking* flockDisplay){
     float orientRadian;
     std::string myString;
 
-    for(int i = 0; i < obstacles.size();i++) {
+    for(int i = 0; i < obstacles.size(); i++)
+    {
       myString = myString+ "DO "
       + std::to_string(i + 1) + " "
       + std::to_string( obstacles[i].x) + " "
@@ -78,15 +83,16 @@ void ToBlender(Flocking* flockDisplay){
       + std::to_string(obstacles[i].z) + "$$";
     }
 
-    if(flockDisplay) {
+    if(flockDisplay)
+    {
         vector<Boid>& boids = flockDisplay->boids;
-        for(int i = 0; i< boids.size() ; i++){
-
-            if(!boids[i].reachedDestination){
-
+        for(int i = 0; i< boids.size(); i++)
+        {
+            if(!boids[i].reachedDestination)
+            {
                 orientRadian = (boids[i].orient);
-                if(boids[i].hitObstacle) {
-
+                if(boids[i].hitObstacle)
+                {
                     myString = myString + "Boid "
                              + std::to_string(count) + " "
                              + std::to_string(i) + " "
@@ -95,7 +101,8 @@ void ToBlender(Flocking* flockDisplay){
                              + std::to_string(orientRadian) + " "
                              + "false" + "$$";
                 }
-                else {
+                else
+                {
                     myString = myString + "Boid "
                              + std::to_string(count) + " "
                              + std::to_string(i) + " "
@@ -105,7 +112,8 @@ void ToBlender(Flocking* flockDisplay){
                              + "false" + "$$";
                 }
             }
-            else {
+            else
+            {
                     myString = myString + "Boid "
                              + std::to_string(count) + " "
                              + std::to_string(i) + " "
@@ -115,21 +123,20 @@ void ToBlender(Flocking* flockDisplay){
                              + "true" + "$$";
             }
 
-            if(colDetect(boids[i])){
+            if(colDetect(boids[i]))
+            {
                 myString = myString + "Hit "
                 + std::to_string(i) + "$$";
                 cout << "Sheep "<< i << " hit obstacle " << endl;
             }
-
         }
         count++;
     }
-    else{
+    else
         cout << "No Flock Handle!"<<endl;
-    }
-    if( send(sockfd , myString.c_str(), strlen(myString.c_str()),0 )<0) {
+
+    if(send(sockfd , myString.c_str(), strlen(myString.c_str()), 0) < 0)
         cout<<"Sending to socket failed";
-    }
 }
 
 void Simulation::loadScene(char* mapFile)
@@ -269,7 +276,8 @@ void Simulation::run()
     bool continueRunning = true;
     static long long simTime = 0;
 
-    while (continueRunning) {
+    while (continueRunning)
+    {
       auto startTime = std::chrono::steady_clock::now();
       continueRunning = frame();
       auto endTime = std::chrono::steady_clock::now();

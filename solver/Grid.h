@@ -30,18 +30,19 @@ public:
 		return mData[y*mMaxX + x];
 	}
 
-	~Grid() 
+	~Grid()
 	{
 		delete[] mData;
 	}
 
-	Grid(const Grid& grid) 
+	Grid(const Grid& grid)
 	{
 		mMaxX = grid.mMaxX;
 		mMaxY = grid.mMaxY;
 		mData = new T[mMaxY * mMaxX];
 		memcpy(mData, grid.mData, sizeof(T) * mMaxX * mMaxY);
 	}
+
 private:
 	T* mData;
 	unsigned int mMaxX;

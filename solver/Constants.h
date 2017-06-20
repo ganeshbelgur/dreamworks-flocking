@@ -1,6 +1,7 @@
 #include <stdio.h>
-#include "Simulation.h"
 #include <iostream>
+
+#include "Simulation.h"
 #pragma once
 
 extern Vec2f endP;

@@ -14,10 +14,11 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
-#include "constants.h"
+#include <iostream>
+
+#include "Constants.h"
 #include "Simulation.h"
 #include "dynamic.h"
-#include <iostream>
 
 /* ASCII code for the escape key. */
 #define ESCAPE 27
@@ -30,7 +31,8 @@ char map3[100] = "maps/scene3.vdb";
 Flocking* flockDisplay;
 Scene* sceneDisplay;
 
-char* getMapForLevel(int level){
+char* getMapForLevel(int level)
+{
   if(level == 0)
     return map0;
   else if (level == 1)
@@ -42,17 +44,18 @@ char* getMapForLevel(int level){
   return map0;
 }
 
-int simMain(int argc, char* argv[]){
-    if(argc<4)
+int simMain(int argc, char* argv[])
+{
+    if(argc < 4)
     {
-        printf("Ideally these are the parameters you should be passing to run the solver\n");
+        printf("Ideally, these are the parameters you should be passing to run the solver\n");
         printf("%s <sleep_time(ms)> <sheep_count> <boundary_padding> <random_seed> <level>\n", argv[0]);
         exit(0);
         return 1;
     }
 
     // The command line parameters for this would look like this:
-    char* mapFile;  //path to the vdb file
+    char* mapFile;               //path to the vdb file
     char* sleep_time = argv[1];  //eventually you'll make this 0 to see how fast your solver really is.
     char* sheep_count = argv[2];
     char* boundary_padding = argv[3];
@@ -70,7 +73,7 @@ int simMain(int argc, char* argv[]){
     long sleepTime = stoi(sleep_time);
     int sheepCount = stoi(sheep_count);
     int boundaryPadding = stoi(boundary_padding);
-    int randSeed = stoi(rand_seed);
+    int randomSeed = stoi(rand_seed);
 
     mapFile = getMapForLevel(level);
     cout << "Simulating for level: " << level << endl;
@@ -78,14 +81,14 @@ int simMain(int argc, char* argv[]){
     //Provide appropriate values for these:
     float maxSpeed = 0.5;
     float maxForce = 0.01;
-    float flockSepWeight = 1.5;
-    float flockAliWeight = 0.1;
-    float flockCohWeight = 1.0;
+    float separationWeight = 1.5;
+    float alignmentWeight = 0.1;
+    float cohesionWeight = 1.0;
     float collisionWeight = 0;
-    float flockSepRadius = 50;
-    float flockAliRadius = 250;
-    float flockCohRadius = 100;
-    float destWeight = 0;
+    float separationRadius = 50;
+    float alignmentRadius = 250;
+    float cohesionRadius = 100;
+    float destinationWeight = 0;
 
     Simulation simulation;
     simulation.loadScene(mapFile);
@@ -95,28 +98,29 @@ int simMain(int argc, char* argv[]){
       boundaryPadding,
       maxSpeed,
       maxForce,
-      flockSepWeight,
-      flockAliWeight,
-      flockCohWeight,
+      separationWeight,
+      alignmentWeight,
+      cohesionWeight,
       collisionWeight,
-      flockSepRadius,
-      flockAliRadius,
-      flockCohRadius,
-      destWeight,
-      randSeed
+      separationRadius,
+      alignmentRadius,
+      cohesionRadius,
+      destinationWeight,
+      randomSeed
     );
 
     flockDisplay = simulation.getFlockHandle();
     sceneDisplay = simulation.getSceneHandle();
 
     simulation.run();
-    std::cout << "Total Simulation time: " << simulation.totalTime() << std::endl;
+    cout << "Total Simulation time: " << simulation.totalTime() << endl;
 
     exit(0);
     return 0;
 }
 
-int main(int argc, char **argv){
+int main(int argc, char **argv)
+{
     flockDisplay=NULL;
     sceneDisplay=NULL;
 

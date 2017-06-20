@@ -1,16 +1,9 @@
-#include "Boid.h"
 #include <iostream>
 #include <cstdlib>
 #include <cmath>
-#include "constants.h"
+#include "Constants.h"
 
-/*
-Add functions needed to create a working flock.
-*/
-
-float generateRandom(float x, float y){
-  return x + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(y-x)));
-}
+#include "Boid.h"
 
 Boid::Boid(
   int x,
@@ -33,7 +26,6 @@ Boid::Boid(
     vel.setval(cos(orient), sin(orient));
     loc.setval(x,y);
 
-    r = 2.0;
     endCorner.setval(xbound,ybound);
     reachedDestination = false;
     hitObstacle = false;
@@ -50,8 +42,8 @@ Boid::Boid(
 }
 
 // Method to update location
-bool Boid::update(vector<Boid> &boids, Vec2f destination, float** collisionSDF, Vec2f** partialDerivaties){
-
+bool Boid::update(vector<Boid> &boids, Vec2f destination, float** collisionSDF, Vec2f** partialDerivaties)
+{
 	flock(boids, destination, collisionSDF, partialDerivaties);
 
   vel += acc;
@@ -67,13 +59,12 @@ bool Boid::update(vector<Boid> &boids, Vec2f destination, float** collisionSDF, 
   return reachedDestination;
 }
 
-void Boid::boundCheck(int padding){
-
+void Boid::boundCheck(int padding)
+{
   if(loc.x>endCorner.x-padding)
   {
       loc.x=endCorner.x-padding;
       vel.x=-vel.x;
-
   }
 
   else if(loc.x<0+padding)
@@ -95,11 +86,13 @@ void Boid::boundCheck(int padding){
   }
 }
 
-void Boid::applyForce(Vec2f force){
-    acc += force;
+void Boid::applyForce(Vec2f force)
+{
+    acc += force / 5.0;
 }
 
-Vec2f Boid::seek(Vec2f target){
+Vec2f Boid::seek(Vec2f target)
+{
   Vec2f desired = target - loc;
 
   desired.normalize();
@@ -110,11 +103,13 @@ Vec2f Boid::seek(Vec2f target){
   return steer;
 }
 
-Vec2f Boid::separate(vector<Boid> &boids){
+Vec2f Boid::separate(vector<Boid> &boids)
+{
   Vec2f steer(0.0, 0.0);
   int neighbourSeparationCount = 0;
 
-  for(int i = 0; i < boids.size(); i++){
+  for(int i = 0; i < boids.size(); i++)
+  {
     float distance = dist(loc, boids[i].loc);
 
     if(distance > 0.0f && distance < flockSepRadius){
@@ -128,7 +123,8 @@ Vec2f Boid::separate(vector<Boid> &boids){
   if (neighbourSeparationCount > 0)
     steer /= neighbourSeparationCount;
 
-  if (steer.length() > 0){
+  if (steer.length() > 0)
+  {
     steer.normalize();
     steer *= maxSpeed;
     steer -= vel;
@@ -138,20 +134,24 @@ Vec2f Boid::separate(vector<Boid> &boids){
   return steer;
 }
 
-Vec2f Boid::align(vector<Boid> &boids){
+Vec2f Boid::align(vector<Boid> &boids)
+{
   Vec2f sum(0.0f, 0.0f);
   int neighbourAlignmentCount = 0;
 
-  for(int i = 0; i < boids.size(); i++){
+  for(int i = 0; i < boids.size(); i++)
+  {
     float distance = dist(loc, boids[i].loc);
 
-    if(distance > 0.0f && distance < flockAliRadius){
+    if(distance > 0.0f && distance < flockAliRadius)
+    {
       sum += boids[i].vel;
       neighbourAlignmentCount++;
     }
   }
 
-  if(neighbourAlignmentCount > 0){
+  if(neighbourAlignmentCount > 0)
+  {
     sum /= neighbourAlignmentCount;
     sum.normalize();
     sum *= maxSpeed;
@@ -164,20 +164,24 @@ Vec2f Boid::align(vector<Boid> &boids){
     return Vec2f(0.0, 0.0);
 }
 
-Vec2f Boid::cohesion(vector<Boid> &boids){
+Vec2f Boid::cohesion(vector<Boid> &boids)
+{
   Vec2f sum(0.0f, 0.0f);
   int neighbourCohesionCount = 0;
 
-  for(int i = 0; i < boids.size(); i++){
+  for(int i = 0; i < boids.size(); i++)
+  {
     float distance = dist(loc, boids[i].loc);
 
-    if(distance > 0.0f && distance < flockCohRadius){
+    if(distance > 0.0f && distance < flockCohRadius)
+    {
       sum += boids[i].loc;
       neighbourCohesionCount++;
     }
   }
 
-  if (neighbourCohesionCount > 0){
+  if (neighbourCohesionCount > 0)
+  {
     sum /= neighbourCohesionCount;
     return seek(sum);
   }
@@ -186,7 +190,8 @@ Vec2f Boid::cohesion(vector<Boid> &boids){
 }
 
 //Flock your boids here
-void Boid::flock(vector<Boid> &boids, Vec2f destination, float** collisionSDF, Vec2f** partialDerivaties){
+void Boid::flock(vector<Boid> &boids, Vec2f destination, float** collisionSDF, Vec2f** partialDerivaties)
+{
   Vec2f separationVector = separate(boids);
   Vec2f alignmentVector = align(boids);
   Vec2f cohesionVector = cohesion(boids);
@@ -200,45 +205,43 @@ void Boid::flock(vector<Boid> &boids, Vec2f destination, float** collisionSDF, V
   applyForce(cohesionVector);
   applyForce((destination - loc) * 0.0000001);
 
-  if(collisionSDF[(int)loc.x][(int)loc.y] <= 0.2f){
+  if(collisionSDF[(int)loc.x][(int)loc.y] <= 0.2f)
+  {
     applyForce(partialDerivaties[(int)loc.x][(int)loc.y] * 20.0f);
-    Vec2f test = partialDerivaties[(int)loc.x][(int)loc.y] * 20.0f;
-    //std::cout << "Applied a partialDerivaties force of: " << test.x << " " << test.y << std::endl;
   }
 
-  if(obstacles.size() && isHit(obstacles[0].x, obstacles[0].y, 30)){
+  if(obstacles.size() && isHit(obstacles[0].x, obstacles[0].y, 45))
+  {
     Vec2f tractorPosition(obstacles[0].x, obstacles[0].y);
     Vec2f runAway = loc - tractorPosition;
     runAway.normalize();
     applyForce(runAway * 50.0f);
-    Vec2f test = runAway * 50.0f;
-    std::cout << "Sheep location: " << loc.x << " " << loc.y << std::endl;
-    std::cout << "Tractor location: " << tractorPosition.x << " " << tractorPosition.y << std::endl;
-    std::cout << "Run away force: " << test.x << " " << test.y << std::endl;
   }
 }
 
-bool Boid::isHit(int x, int y, int radius) {
-
-    int range = 1;//calculation error range
+bool Boid::isHit(int x, int y, int radius)
+{
+    int range = 1;  //Calculation error range
     int dist = radius + range;
-    if(pow((x-loc.x),2)+pow((y-loc.y),2) < (dist * dist) ){
+
+    if(pow((x - loc.x), 2) + pow((y - loc.y), 2) < (dist * dist))
+    {
         return true;
     }
     return false;
 }
 
 
-float Boid::dist(Vec2f v1,Vec2f v2)
+float Boid::dist(Vec2f v1, Vec2f v2)
 {
     return v1.distance(v2);
 }
 
 float Boid::clamp(float val, float minval, float maxval)
 {
-    if(val<minval)
+    if(val < minval)
         return minval;
-    else if (val>maxval)
+    else if (val > maxval)
         return maxval;
     else
         return val;
