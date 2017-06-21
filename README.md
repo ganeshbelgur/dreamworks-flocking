@@ -14,7 +14,7 @@ Mandatory fields to populate
 
 ### Levels
 ##### Level 0
-Take the sheep moving from source to destination. Make sure they follow the rules of flocking! Populate the vector of 'Boid'.
+Make the sheeps travel from the source to the destination. Make sure they follow the rules of flocking! Populate the vector of 'Boid'.
 
 ##### Level 1
 The sheep must navigate static obstacles, as they go from source to destination, while maintaining the flock. Use Sccene.h to access the start and destination. The scene/obstacles information is supplied.
@@ -23,11 +23,11 @@ The sheep must navigate static obstacles, as they go from source to destination,
 There is a moving obstacle now. Remember the sheep code. Use the vector 'obstacles' to get your dynamic obstacle position at each time step.
 
 ##### Level 3
-Navigate to the destination by crossing more obstacles. How much do your sheep love the fellowship?
+Navigate to the destination by crossing more obstacles. How much do your sheeps love fellowship?
 
 ### Compiling Instructions
 1. Build your code - make
-2. Run the run_scene'level_number'.sh
+2. Run the run_scene"level_number".sh
 
 If you get linker errors, make sure you set LD_LIBRARY_PATH to path of the 'libdynamic.so' file.
 
@@ -38,7 +38,7 @@ If you get linker errors, make sure you set LD_LIBRARY_PATH to path of the 'libd
 3. Use the partialDerivatives[x][y] to know the direction away from the nearest osbtacle at position (x, y): Flocking.cpp
 
 ##### Dynamic Obstacles
-1. Use the obstacle vector in "constant.h" to access the location of the obstacle.
+1. Use the obstacle vector in "Constants.h" to access the location of the dynamic obstacle.
 
 - Notes/Hints: You don't have to bother about VDBs and map handling. Just focus on working on the boids and flocking.
 
